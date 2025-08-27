@@ -1,4 +1,38 @@
+/*
+
+## ¿Qué es main.dart y cómo lanza la aplicación?
+
+El archivo **main.dart** es el punto de entrada de toda aplicación Flutter.
+Contiene la función principal `void main()`, que es la primera pieza de código 
+que se ejecuta cuando se inicia la app. Dentro de esta función, se llama a 
+`runApp()`, pasándole el widget raíz de tu aplicación (comúnmente llamado `MyApp`), 
+lo que efectivamente "infla" ese widget y lo muestra en la pantalla.
+
+---
+
+## ¿Qué rol juega pubspec.yaml?
+
+El archivo **pubspec.yaml** es el archivo de configuración y manifiesto del proyecto.
+Su función principal es gestionar las **dependencias** del proyecto, como 
+paquetes y plugins de terceros que añaden funcionalidades a la app. También se 
+utiliza para declarar los **assets** que la aplicación utilizará, como imágenes, 
+videos y fuentes personalizadas.
+
+---
+
+## ¿Cuál es la diferencia entre lib/ y android/?
+
+La carpeta **lib/ ** es donde vive todo el código **Dart** de tu aplicación
+Flutter; aquí es donde los desarrolladores pasan la mayor parte del tiempo
+escribiendo la lógica y la interfaz de usuario que será compartida entre todas 
+las plataformas. Por otro lado, la carpeta **android/ ** contiene el proyecto 
+anfitrión de **Android nativo**, que se encarga de compilar y ejecutar el código
+de Flutter en un dispositivo Android; se modifica principalmente para 
+configuraciones específicas de la plataforma.
+*/
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -11,7 +45,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'You have pressed the button this many times:',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -109,6 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            const Icon(CupertinoIcons.star),
           ],
         ),
       ),
