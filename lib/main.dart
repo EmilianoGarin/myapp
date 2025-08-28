@@ -64,10 +64,81 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: ProfileCard(
+        name: 'John Doe', 
+        description: 'Flutter Developer | Tech Enthusiast',
+        imageUrl: 'https://picsum.photos/id/237/200/300'),
     );
   }
 }
+class ProfileCard extends StatelessWidget {
+  String name = 'John Doe';
+  String description = 'Flutter Developer | Tech Enthusiast';
+  String imageUrl = 'https://picsum.photos/id/237/200/300';
+
+  ProfileCard({
+    super.key,
+    required this.name,
+    required this.description,
+    required this.imageUrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Profile Card'),
+        backgroundColor: Colors.deepPurple,
+      ),
+      body: Center(
+        child: Container(
+          padding: const EdgeInsets.all(24.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min, // To make the card wrap its content
+            children: <Widget>[
+              CircleAvatar(
+                radius: 50,
+                backgroundImage: NetworkImage(imageUrl),
+                backgroundColor: Colors.transparent,
+              ),
+              SizedBox(height: 16),
+              Text(
+                name,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                description,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -88,7 +159,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
   void _incrementCounter() {
     setState(() {
@@ -97,7 +167,6 @@ class _MyHomePageState extends State<MyHomePage> {
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-      _counter++;
     });
   }
 
@@ -119,39 +188,35 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const Icon(CupertinoIcons.star),
+      body: ListView(
+        padding: EdgeInsets.symmetric(vertical: 8.0),
+        children: <Widget>[
+          ProfileCard(
+            name: 'Jane Doe',
+            description: 'Mobile App Designer | UX Specialist',
+            imageUrl: 'https://picsum.photos/id/1/200/200',
+          ),
+          ProfileCard(
+            name: 'Peter Jones',
+            description: 'Backend Engineer | Cloud Expert',
+            imageUrl: 'https://picsum.photos/id/10/200/200',
+          ),
+          ProfileCard(
+            name: 'Alice Williams',
+            description: 'Project Manager | Agile Coach',
+            imageUrl: 'https://picsum.photos/id/20/200/200',),
+          ProfileCard(
+            name: 'Tom Brown',
+            description: 'QA Tester | Automation Fanatic',
+            imageUrl: 'https://picsum.photos/id/30/200/200',),
           ],
-        ),
       ),
-      floatingActionButton: FloatingActionButton(
+      /*floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ), // This trailing comma makes auto-formatting nicer for build methods.*/
     );
   }
 }
+        
