@@ -30,7 +30,7 @@ anfitrión de **Android nativo**, que se encarga de compilar y ejecutar el códi
 de Flutter en un dispositivo Android; se modifica principalmente para 
 configuraciones específicas de la plataforma.
 */
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -63,6 +63,11 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => HomeScreen(),
+        '/details': (context) => DetailScreen(message: 'Named Route'),
+      },
       home: ProfileCard(
         name: 'John Doe',
         description: 'Flutter Developer | Tech Enthusiast',
@@ -72,12 +77,13 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// profile Card
 class ProfileCard extends StatelessWidget {
   final String name;
   final String description;
   final String imageUrl;
 
-  ProfileCard({
+  const ProfileCard({
     super.key,
     required this.name,
     required this.description,
@@ -99,7 +105,7 @@ class ProfileCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(16.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withValues(alpha: 0.5),
+                color: Colors.grey.withAlpha(128),
                 spreadRadius: 5,
                 blurRadius: 7,
                 offset: const Offset(0, 3), // changes position of shadow
@@ -137,6 +143,7 @@ class ProfileCard extends StatelessWidget {
   }
 }
 
+// Counter
 class CounterWidget extends StatefulWidget {
   const CounterWidget({super.key});
 
@@ -173,6 +180,7 @@ class _CounterWidgetState extends State<CounterWidget> {
   }
 }
 
+// TextInputWidget
 class TextInputWidget extends StatefulWidget {
   const TextInputWidget({super.key});
 
@@ -223,6 +231,7 @@ class _TextInputWidgetState extends State<TextInputWidget> {
   }
 }
 
+// Toggle Button
 class ToggleControlsWidget extends StatefulWidget {
   const ToggleControlsWidget({super.key});
 
@@ -280,6 +289,7 @@ class _ToggleControlsWidgetState extends State<ToggleControlsWidget> {
   }
 }
 
+// miniForm Widget
 class MiniFormWidget extends StatefulWidget {
   const MiniFormWidget({super.key});
 
@@ -351,6 +361,7 @@ class _MiniFormWidgetState extends State<MiniFormWidget> {
   }
 }
 
+//home page
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -418,6 +429,50 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.*/
+    );
+  }
+}
+
+// Screen
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Home Screen')),
+      body: Center(
+        child: ElevatedButton(
+          key: Key('goToDetailButton'),
+          onPressed: () {
+            Navigator.pushNamed(context, '/details');
+          },
+          child: const Text('Go to Detail'),
+        ),
+      ),
+    );
+  }
+}
+
+class DetailScreen extends StatelessWidget {
+  final String message;
+
+  const DetailScreen({super.key, required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    Expanded(
+      child: ElevatedButton(
+        key: Key('backButton'),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: const Text('Go Back'),
+      ),
+    );
+    return Scaffold(
+      appBar: AppBar(title: const Text('Detail Screen')),
+      body: Center(child: Text(message, key: Key('messageText'))),
     );
   }
 }
