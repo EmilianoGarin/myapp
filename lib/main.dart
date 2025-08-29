@@ -33,7 +33,6 @@ configuraciones específicas de la plataforma.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -65,16 +64,18 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: ProfileCard(
-        name: 'John Doe', 
+        name: 'John Doe',
         description: 'Flutter Developer | Tech Enthusiast',
-        imageUrl: 'https://picsum.photos/id/237/200/300'),
+        imageUrl: 'https://picsum.photos/id/237/200/300',
+      ),
     );
   }
 }
+
 class ProfileCard extends StatelessWidget {
-  String name = 'John Doe';
-  String description = 'Flutter Developer | Tech Enthusiast';
-  String imageUrl = 'https://picsum.photos/id/237/200/300';
+  final String name;
+  final String description;
+  final String imageUrl;
 
   ProfileCard({
     super.key,
@@ -98,7 +99,7 @@ class ProfileCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(16.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
+                color: Colors.grey.withValues(alpha: 0.5),
                 spreadRadius: 5,
                 blurRadius: 7,
                 offset: const Offset(0, 3), // changes position of shadow
@@ -126,10 +127,7 @@ class ProfileCard extends StatelessWidget {
               Text(
                 description,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                ),
+                style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
             ],
           ),
@@ -139,6 +137,219 @@ class ProfileCard extends StatelessWidget {
   }
 }
 
+class CounterWidget extends StatefulWidget {
+  const CounterWidget({super.key});
+
+  @override
+  _CounterWidgetState createState() => _CounterWidgetState();
+}
+
+class _CounterWidgetState extends State<CounterWidget> {
+  int counter = 0;
+
+  void _incrementCounter() {
+    setState(() {
+      counter++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          '$counter',
+          key: Key('counterText'),
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        ElevatedButton(
+          key: Key('incrementButton'),
+          onPressed: _incrementCounter,
+          child: const Text('Increment'),
+        ),
+      ],
+    );
+  }
+}
+
+class TextInputWidget extends StatefulWidget {
+  const TextInputWidget({super.key});
+
+  @override
+  _TextInputWidgetState createState() => _TextInputWidgetState();
+}
+
+class _TextInputWidgetState extends State<TextInputWidget> {
+  final TextEditingController _controller = TextEditingController();
+  String _currentText = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(_updateText);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _updateText() {
+    setState(() {
+      _currentText = _controller.text;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        TextField(
+          key: Key('inputField'),
+          controller: _controller,
+          decoration: InputDecoration(hintText: 'Enter text here'),
+        ),
+        SizedBox(height: 16),
+        Text(
+          _currentText,
+          key: Key('liveText'),
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+      ],
+    );
+  }
+}
+
+class ToggleControlsWidget extends StatefulWidget {
+  const ToggleControlsWidget({super.key});
+
+  @override
+  _ToggleControlsWidgetState createState() => _ToggleControlsWidgetState();
+}
+
+class _ToggleControlsWidgetState extends State<ToggleControlsWidget> {
+  bool isDarkMode = false;
+  bool agreedToTerms = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Dark Mode'),
+            Switch(
+              key: Key('darkModeSwitch'),
+              value: isDarkMode,
+              onChanged: (bool value) {
+                setState(() {
+                  isDarkMode = value;
+                });
+              },
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Checkbox(
+              key: Key('termsCheckbox'),
+              value: agreedToTerms,
+              onChanged: (bool? value) {
+                setState(() {
+                  agreedToTerms = value ?? false;
+                });
+              },
+            ),
+            const Text('Agree to Terms'),
+          ],
+        ),
+        SizedBox(height: 16),
+        Text(
+          key: Key('statusText'),
+          isDarkMode && agreedToTerms ? 'Ready' : 'Incomplete',
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+      ],
+    );
+  }
+}
+
+class MiniFormWidget extends StatefulWidget {
+  const MiniFormWidget({super.key});
+
+  @override
+  _MiniFormWidgetState createState() => _MiniFormWidgetState();
+}
+
+class _MiniFormWidgetState extends State<MiniFormWidget> {
+  final TextEditingController _nameController = TextEditingController();
+  bool _agreedToTerms = false;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  void _submitForm() {
+    if (_nameController.text.isNotEmpty && _agreedToTerms) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Form submitted successfully!')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please complete all fields.')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          TextField(
+            key: Key('nameField'),
+            controller: _nameController,
+            decoration: InputDecoration(
+              labelText: 'Name',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          SizedBox(height: 16),
+          Row(
+            children: [
+              Checkbox(
+                key: Key('formCheckbox'),
+                value: _agreedToTerms,
+                onChanged: (bool? value) {
+                  setState(() {
+                    _agreedToTerms = value ?? false;
+                  });
+                },
+              ),
+              const Text('I agree to the terms'),
+            ],
+          ),
+          SizedBox(height: 24),
+          ElevatedButton(
+            key: Key('submitButton'),
+            onPressed: _submitForm,
+            child: const Text('Submit'),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -159,17 +370,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -204,12 +404,14 @@ class _MyHomePageState extends State<MyHomePage> {
           ProfileCard(
             name: 'Alice Williams',
             description: 'Project Manager | Agile Coach',
-            imageUrl: 'https://picsum.photos/id/20/200/200',),
+            imageUrl: 'https://picsum.photos/id/20/200/200',
+          ),
           ProfileCard(
             name: 'Tom Brown',
             description: 'QA Tester | Automation Fanatic',
-            imageUrl: 'https://picsum.photos/id/30/200/200',),
-          ],
+            imageUrl: 'https://picsum.photos/id/30/200/200',
+          ),
+        ],
       ),
       /*floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
@@ -219,4 +421,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-        
