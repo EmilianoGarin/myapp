@@ -148,7 +148,7 @@ class CounterWidget extends StatefulWidget {
   const CounterWidget({super.key});
 
   @override
-  _CounterWidgetState createState() => _CounterWidgetState();
+  State<CounterWidget> createState() => _CounterWidgetState();
 }
 
 class _CounterWidgetState extends State<CounterWidget> {
@@ -185,7 +185,7 @@ class TextInputWidget extends StatefulWidget {
   const TextInputWidget({super.key});
 
   @override
-  _TextInputWidgetState createState() => _TextInputWidgetState();
+  State<TextInputWidget> createState() => _TextInputWidgetState();
 }
 
 class _TextInputWidgetState extends State<TextInputWidget> {
@@ -236,7 +236,7 @@ class ToggleControlsWidget extends StatefulWidget {
   const ToggleControlsWidget({super.key});
 
   @override
-  _ToggleControlsWidgetState createState() => _ToggleControlsWidgetState();
+  State<ToggleControlsWidget> createState() => _ToggleControlsWidgetState();
 }
 
 class _ToggleControlsWidgetState extends State<ToggleControlsWidget> {
@@ -294,7 +294,7 @@ class MiniFormWidget extends StatefulWidget {
   const MiniFormWidget({super.key});
 
   @override
-  _MiniFormWidgetState createState() => _MiniFormWidgetState();
+  State<MiniFormWidget> createState() => _MiniFormWidgetState();
 }
 
 class _MiniFormWidgetState extends State<MiniFormWidget> {
@@ -473,6 +473,64 @@ class DetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Detail Screen')),
       body: Center(child: Text(message, key: Key('messageText'))),
+    );
+  }
+}
+
+class UserListScreen extends StatefulWidget {
+  const UserListScreen({super.key});
+
+  @override
+  State<UserListScreen> createState() => _UserListScreenState();
+}
+
+class _UserListScreenState extends State<UserListScreen> {
+  late Future<List<dynamic>> _users;
+
+  @override
+  void initState() {
+    super.initState();
+    _users = fetchUsers(); 
+  }
+
+  Future<List<dynamic>> fetchUsers() async {
+    
+    await Future.delayed(const Duration(seconds: 2)); 
+    return List.generate(20, (i) => {'id': i, 'name': 'User $i', 'email': 'user$i@example.com'});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('User List')),
+      body: Center(
+        child: FutureBuilder<List<dynamic>>(
+          future: _users,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator(key: Key('loadingIndicator'));
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}', key: Key('errorText'));
+            } else if (snapshot.hasData) {
+              return ListView.builder(
+                key: Key('userListView'),
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  final user = snapshot.data![index];
+                  return ListTile(
+                    key: Key('userTile_${user['id']}'),
+                    title: Text(user['name']),
+                    subtitle: Text(user['email']),
+                  );
+                },
+              );
+            } else {
+              return const Text('No data available', key: Key('noDataText'));
+            }
+          },
+        ),
+      ),
     );
   }
 }
